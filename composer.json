@@ -1,0 +1,16 @@
+{
+    "name": "kuliah/management-document",
+    "description": "Tugas management document",
+    "autoload": {
+        "psr-4": {
+            "Kuliah\\ManagementDocument\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "bagaz",
+            "email": "bagazfrazetyo@gmail.com"
+        }
+    ],
+    "require": {}
+}
