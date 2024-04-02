@@ -26,27 +26,29 @@
                     <thead class="thead-dark">
                         <tr>
                             <th>No</th>
-                            <th>Username</th>
-                            <th>Status</th>
+                            <th>Nama</th>
+                            <th>Alamat</th>
+                            <th>Telepon</th>
+                            <th>Email</th>
+                            <th>Logo</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($user['data'] as $key => $value) : ?>
+                        <?php foreach ($setting['data'] as $key => $value) : ?>
                             <tr>
                                 <td><?php echo $key + 1; ?></td>
+                                <td><?php echo $value->Nama; ?></td>
+                                <td><?php echo $value->Alamat; ?></td>
+                                <td><?php echo $value->Telepon; ?></td>
                                 <td><?php echo $value->Email; ?></td>
                                 <td>
-                                    <?php if ($value->Active) : ?>
-                                        <div class="badge badge-success">Active</div>
-                                    <?php else : ?>
-                                        <div class="badge badge-danger">Not Active</div>
-                                    <?php endif; ?>
+                                    <img src="<?= $value->Logo ?>" alt="" style="width: 100px;">
                                 </td>
                                 <td>
-                                    <a href="<?= self::url($value->Email) ?>" class="btn btn-secondary">Detail</a>
-                                    <a href="<?= self::url('edit/' . $value->Email) ?>" class="btn btn-primary">Edit</a>
-                                    <form action="<?= self::url('delete/' . $value->Email) ?>" method="post" style="display: inline;">
+                                    <a href="<?= self::url($value->ID) ?>" class="btn btn-secondary">Detail</a>
+                                    <a href="<?= self::url('edit/' . $value->ID) ?>" class="btn btn-primary">Edit</a>
+                                    <form action="<?= self::url('delete/' . $value->ID) ?>" method="post" style="display: inline;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <button class="btn btn-danger">Delete</button>
                                     </form>
@@ -59,7 +61,7 @@
             </div>
         </div>
         <?php 
-            self::include('navigation', $user);
+            self::include('navigation', $setting);
         ?>
     </div>
 </div>

@@ -2,13 +2,13 @@
 
 namespace Kuliah\ManagementDocument\Middleware;
 
-class AuthMiddleware implements Middleware
+class GuestMiddleware implements Middleware
 {
 
     function before(): void
     {
-        if (!isset($_SESSION['user'])) {
-            header('Location: /');
+        if (isset($_SESSION['user'])) {
+            header('Location: /dashboard');
             exit;
         }
     }

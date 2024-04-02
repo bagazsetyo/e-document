@@ -8,17 +8,9 @@ class HomeController
 {
     public function index()
     {
-        View::render('about', array(
-            'title' => 'Home',
+        View::render('dashboard', array(
+            'title' => 'Dashboard',
         ));
-    }
-
-    public function about()
-    {
-        echo 123;
-        // View::render('about', array(
-        //     'title' => 'asdasdasd Us',
-        // ));
     }
 
 }

@@ -26,27 +26,35 @@
                     <thead class="thead-dark">
                         <tr>
                             <th>No</th>
-                            <th>Username</th>
-                            <th>Status</th>
+                            <th>No_Dokumen</th>
+                            <th>Kode</th>
+                            <th>Judul</th>
+                            <th>Deskripsi</th>
+                            <th>Pembuatan</th>
+                            <th>Modifikasi</th>
+                            <th>Kode Pengguna</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($user['data'] as $key => $value) : ?>
+                        <?php
+                        foreach ($dokumen['data'] as $key => $value) : ?>
                             <tr>
                                 <td><?php echo $key + 1; ?></td>
-                                <td><?php echo $value->Email; ?></td>
+                                <td><?php echo $value->No_Dokumen; ?></td>
+                                <td><?php echo $value->Kode; ?></td>
+                                <td><?php echo $value->Judul; ?></td>
+                                <td><?php echo $value->Deskripsi; ?></td>
+                                <td><?php echo $value->Tanggal_Pembuatan; ?></td>
+                                <td><?php echo $value->Tanggal_Modifikasi; ?></td>
+                                <td><?php echo $value->Kode_Pengguna; ?></td>
                                 <td>
-                                    <?php if ($value->Active) : ?>
-                                        <div class="badge badge-success">Active</div>
-                                    <?php else : ?>
-                                        <div class="badge badge-danger">Not Active</div>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <a href="<?= self::url($value->Email) ?>" class="btn btn-secondary">Detail</a>
-                                    <a href="<?= self::url('edit/' . $value->Email) ?>" class="btn btn-primary">Edit</a>
-                                    <form action="<?= self::url('delete/' . $value->Email) ?>" method="post" style="display: inline;">
+                                    <a href="<?= self::url($value->No_Dokumen) ?>" class="btn btn-secondary">Detail</a>
+                                    <form action="<?= self::url('edit') ?>" method="post" style="display: inline;">
+                                        <input type="hidden" name="No_Dokumen" value="<?= $value->No_Dokumen ?>">
+                                        <button class="btn btn-primary">Edit</button>
+                                    </form>
+                                    <form action="<?= self::url('delete/' . $value->No_Dokumen) ?>" method="post" style="display: inline;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <button class="btn btn-danger">Delete</button>
                                     </form>
@@ -58,8 +66,8 @@
                 </table>
             </div>
         </div>
-        <?php 
-            self::include('navigation', $user);
+        <?php
+            self::include('navigation', $dokumen);
         ?>
     </div>
 </div>

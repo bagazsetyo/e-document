@@ -41,7 +41,7 @@ class Model extends ConfigDB
         return $this;
     }
 
-    public function where($column, $operator = null, $value = null, $boolean = 'and')
+    public function where($column, $operator = '=', $value = null, $boolean = 'and')
     {
         $this->query->where($column, $operator, $value, $boolean);
         return $this;

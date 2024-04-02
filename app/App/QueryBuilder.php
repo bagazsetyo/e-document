@@ -108,7 +108,7 @@ class QueryBuilder
             $data = $stmt->fetch(PDO::FETCH_OBJ);
             return $data;
         }catch(PDOException $e){
-            echo $e->getMessage();
+            echo $e->getMessage() . '<br>' . $this->query;
         }
     }
 

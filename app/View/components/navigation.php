@@ -15,20 +15,30 @@ if (count($params) > 0) {
     $fullUrl .= '?';
 }
 
+// var_dump($data['totalPage'], $data['page']);
+$beforePage = $data['page'] - 2;
+$afterPage = $data['page'] + 2;
+if ($beforePage < 1) {
+    $beforePage = 1;
+}
+if ($afterPage > $data['totalPage']) {
+    $afterPage = $data['totalPage'];
+}
+$pagination = range($beforePage, $afterPage);
 ?>
-<?php if ($user['totalPage'] > 1) : ?>
+<?php if ($data['totalPage'] > 1) : ?>
     <div class="card-footer text-right">
         <nav class="d-inline-block">
             <ul class="pagination mb-0">
-                <li class="page-item <?= ($user['page'] <= 1 ? "disabled" : '') ?>">
+                <li class="page-item <?= ($data['page'] <= 1 ? "disabled" : '') ?>">
                     <a class="page-link" 
-                        href="<?= $fullUrl . 'page=' . ($user['page'] > 1 ? ($user['page'] - 1) : 1) ?>" tabindex="-1">
+                        href="<?= $fullUrl . 'page=' . ($data['page'] > 1 ? ($data['page'] - 1) : 1) ?>" tabindex="-1">
                         <i class="fas fa-chevron-left">
                         </i>
                     </a>
                 </li>
-                <?php for ($i = 1; $i <= $user['totalPage']; $i++) : ?>
-                    <?php if ($i == $user['page']) : ?>
+                <?php foreach ($pagination as $i) : ?>
+                    <?php if ($i == $data['page']) : ?>
                         <li class="page-item active">
                             <a class="page-link" 
                                 href="<?= $fullUrl . 'page=' . $i ?>">
@@ -43,10 +53,10 @@ if (count($params) > 0) {
                             </a>
                         </li>
                     <?php endif; ?>
-                <?php endfor; ?>
-                <li class="page-item <?= ($user['page'] >= $user['totalPage'] ? "disabled" : '') ?>">
+                <?php endforeach; ?>
+                <li class="page-item <?= ($data['page'] >= $data['totalPage'] ? "disabled" : '') ?>">
                     <a class="page-link" 
-                        href="<?= $fullUrl . 'page=' . ($user['page'] < $user['totalPage'] ? ($user['page'] + 1) : $user['totalPage']) ?>">
+                        href="<?= $fullUrl . 'page=' . ($data['page'] < $data['totalPage'] ? ($data['page'] + 1) : $data['totalPage']) ?>">
                         <i class="fas fa-chevron-right"></i>
                     </a>
                 </li>
