@@ -8,10 +8,5 @@ class Setting extends Model
 {
     protected $table = 'setting';
     protected $primaryKey = 'ID';
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->setTable($this->table);
-    }
+    protected $logable = true;
 }

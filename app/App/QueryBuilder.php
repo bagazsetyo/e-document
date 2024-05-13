@@ -25,30 +25,72 @@ class QueryBuilder
     public function select($columns = ['*'])
     {
         $this->select = true;
-        $this->query = 'SELECT ' . implode(', ', $columns);
+        $this->query = 'SELECT ' . implode(', ', $columns) . ' FROM ' . $this->table;
         return $this;
     }
 
-    public function join($table, $first, $operator = null, $second = null, $type = 'inner')
+    public function join($table, $operator = null, $type = 'inner')
     {
-        $this->query .= " $type JOIN $table ON $first $operator $second";
+        $this->query .= " $type JOIN $table ON $operator";
         return $this;
     }
 
-    public function where($column, $operator = null, $value = null, $boolean = 'and')
-    {
-        if ($this->query == '') {
-            $this->query .= ' WHERE ';
-        } else {
-            $this->query .= " $boolean ";
-        }
+    // public function where($column, $operator = null, $value = null, $boolean = 'and')
+    // {
+    //     if ($this->query == '') {
+    //         $this->query .= ' WHERE ';
+    //     } else {
+    //         $this->query .= " WHERE $boolean ";
+    //     }
 
+    //     if (func_num_args() == 2) {
+    //         $this->query .= "$column = '$operator'";
+    //     } else {
+    //         $this->query .= "$column $operator '$value'";
+    //     }
+
+    //     return $this;
+    // }
+    
+    public function where($column, $operator = null, $value = null)
+    {
+        $this->query .= " WHERE ";
+        
         if (func_num_args() == 2) {
             $this->query .= "$column = '$operator'";
         } else {
             $this->query .= "$column $operator '$value'";
         }
 
+        return $this;
+    }
+    
+    public function whereOperation($column, $operator = null, $value = null, $boolean = 'and')
+    {
+        $this->query .= " $boolean ";
+        
+        if (func_num_args() == 2) {
+            $this->query .= "$column = '$operator'";
+        } else {
+            $this->query .= "$column $operator '$value'";
+        }
+
+        return $this;
+    }
+
+    public function orWhereOp($column, $operator = null, $value = null)
+    {
+        return $this->whereOperation($column, $operator, $value, 'or');
+    }
+
+    public function andWhereOp($column, $operator = null, $value = null)
+    {
+        return $this->whereOperation($column, $operator, $value, 'and');
+    }
+
+    public function having($column, $operator = null, $value = null)
+    {
+        $this->query .= " HAVING $column $operator '$value'";
         return $this;
     }
 
@@ -175,5 +217,10 @@ class QueryBuilder
         }catch(PDOException $e){
             echo $e->getMessage();
         }
+    }
+
+    public function getQuery()
+    {
+        return $this->query;
     }
 }

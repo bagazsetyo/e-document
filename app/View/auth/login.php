@@ -11,15 +11,15 @@
                         <h4>Login</h4>
                     </div>
 
-                    <?php if (isset($_SESSION['error'])) : ?>
+                    <?php if (getSession('error')) : ?>
                         <div class="alert alert-danger" role="alert">
-                            <?php echo $_SESSION['error']; ?>
+                            <?php echo flash('error'); ?>
                         </div>
                     <?php endif; ?>
                     <div class="card-body">
                         <form method="POST" class="needs-validation" novalidate="">
                             <div class="form-group">
-                                <label for="email">Email</label>
+                                <label for="email">Username</label>
                                 <input id="email" type="text" class="form-control" name="email" tabindex="1" required autofocus>
                                 <div class="invalid-feedback">
                                     Please fill in your email

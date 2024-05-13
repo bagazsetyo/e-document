@@ -5,23 +5,20 @@ namespace Kuliah\ManagementDocument\Controller;
 use Kuliah\ManagementDocument\App\View;
 use Kuliah\ManagementDocument\Models\Dokumen;
 use Kuliah\ManagementDocument\Models\Log;
+use Kuliah\ManagementDocument\Service\DokumenService;
 
 class DokumenController
 {
+    protected DokumenService $dokumenService;
+
+    public function __construct()
+    {
+        $this->dokumenService = new DokumenService();
+    }
+
     public function index()
     {
-        $dokumen = Dokumen::model(); 
-
-        if(isset($_GET['search'])) {
-            $dokumen = $dokumen->where('Kode', 'like', '%'.$_GET['search'].'%')
-                            ->orWhere('Judul', 'like', '%'.$_GET['search'].'%')
-                            ->orWhere('Deskripsi', 'like', '%'.$_GET['search'].'%')
-                            ->orWhere('Tanggal_Modifikasi', 'like', '%'.$_GET['search'].'%')
-                            ->orWhere('Kode_Pengguna', 'like', '%'.$_GET['search'].'%')
-                            ->orWhere('Tanggal_Pembuatan', 'like', '%'.$_GET['search'].'%');
-        }
-
-        $dokumen = $dokumen->paginate(10);
+        $dokumen = $this->dokumenService->index();
 
         View::render('master/dokumen/index', array(
             'title' => 'dokumen',
@@ -29,33 +26,84 @@ class DokumenController
         ));
     }
 
-    public function edit()
+    public function edit($id)
     {
-        $dokumen = Dokumen::model()->where('No_Dokumen', '=', $_POST['No_Dokumen'])->first();
+        $kategoriDokumen = $this->dokumenService->getKategoriDokumen();
+        $pengguna = $this->dokumenService->getPengguna();
+        $dokumen = $this->dokumenService->getDokumen($id);
+        if(!$dokumen) {
+            redirect('/404.html');
+        }
 
         View::render('master/dokumen/edit', array(
+            'title' => 'Edit Dokumen',
+            'dokumen' => $dokumen,
+            'kategoriDokumen' => $kategoriDokumen,
+            'pengguna' => $pengguna,
+        ));
+    }
+
+    public function update($id)
+    {
+        $this->dokumenService->update($id);
+        setFlash('success', 'Data berhasil diupdate');
+
+        redirect('/master/dokumen');
+    }
+
+    public function delete($id)
+    {
+        $this->dokumenService->delete($id);
+        setFlash('success', 'Data berhasil dihapus');
+
+        redirect('/master/dokumen');
+    }
+
+    public function create()
+    {
+        $kategoriDokumen = $this->dokumenService->getKategoriDokumen();
+        $pengguna = $this->dokumenService->getPengguna();
+
+        View::render('master/dokumen/create', array(
+            'title' => 'Create Dokumen',
+            'kategoriDokumen' => $kategoriDokumen,
+            'pengguna' => $pengguna,
+        ));
+    }
+
+    public function store()
+    {
+        $this->dokumenService->store();
+        setFlash('success', 'Data berhasil ditambahkan');
+
+        redirect('/master/dokumen');
+    }
+
+    public function detail($id)
+    {
+        $kategoriDokumen = $this->dokumenService->getKategoriDokumen();
+        $pengguna = $this->dokumenService->getPengguna();
+        $dokumen = $this->dokumenService->getDokumen($id);
+        if(!$dokumen) {
+            redirect('/404.html');
+        }
+
+        View::render('master/dokumen/detail', array(
+            'title' => 'Detail Dokumen',
+            'dokumen' => $dokumen,
+            'kategoriDokumen' => $kategoriDokumen,
+            'pengguna' => $pengguna,
+        ));
+    }
+
+    public function export()
+    {
+        $dokumen = $this->dokumenService->getAllDokumen();
+
+        View::renderPdf('master/dokumen/export', array(
             'title' => 'dokumen',
             'dokumen' => $dokumen,
         ));
     }
 
-    public function update()
-    {
-        $dokumen = Dokumen::model()->where('No_Dokumen', '=', $_POST['No_Dokumen'])->first();
-
-        if(!$dokumen) {
-            header('Location: /dokumen');
-        }
-
-        $dokumen = Dokumen::model()->where('No_Dokumen', '=', $_POST['No_Dokumen'])->update([
-            'Kode' => $_POST['Kode'] ?? $dokumen->Kode,
-            'Judul' => $_POST['Judul'] ?? $dokumen->Judul,
-            'Deskripsi' => $_POST['Deskripsi'] ?? $dokumen->Deskripsi,
-            'Tanggal_Modifikasi' => $_POST['Tanggal_Modifikasi'] ?? $dokumen->Tanggal_Modifikasi,
-            'Kode_Pengguna' => $_POST['Kode_Pengguna'] ?? $dokumen->Kode_Pengguna,
-            'Tanggal_Pembuatan' => $_POST['Tanggal_Pembuatan'] ?? $dokumen->Tanggal_Pembuatan,
-        ]);
-
-        header('Location: /master/dokumen');
-    }
 }

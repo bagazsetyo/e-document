@@ -4,7 +4,18 @@
     "autoload": {
         "psr-4": {
             "Kuliah\\ManagementDocument\\": "app/"
-        }
+        },
+        "files": [
+            "app/Helpers/redirect.php",
+            "app/Helpers/session.php",
+            "app/Helpers/pagination.php",
+            "app/Helpers/request.php",
+            "app/Helpers/url.php",
+            "app/Helpers/storage.php",
+            "app/Helpers/checkPermission.php",
+            "app/Helpers/config.php",
+            "app/Helpers/button.php"
+        ]
     },
     "authors": [
         {
@@ -12,5 +23,8 @@
             "email": "bagazfrazetyo@gmail.com"
         }
     ],
+    "scripts": {
+        "migrate": "php database/migration.php"
+    },
     "require": {}
 }

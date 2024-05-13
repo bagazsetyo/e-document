@@ -4,18 +4,20 @@ namespace Kuliah\ManagementDocument\Controller;
 
 use Kuliah\ManagementDocument\App\View;
 use Kuliah\ManagementDocument\Models\User;
+use Kuliah\ManagementDocument\Service\UserService;
 
 class UserController
 {
+    protected UserService $userService;
+
+    public function __construct()
+    {
+        $this->userService = new UserService();
+    }
+
     public function index()
     {
-        $user = User::model();
-
-        if(isset($_GET['search'])) {
-            $user = $user->where('Email', 'like', '%'.$_GET['search'].'%');
-        }
-        
-        $user = $user->paginate(10);
+        $user = $this->userService->index();
 
         View::render('user/index', array(
             'title' => 'User',
@@ -23,66 +25,77 @@ class UserController
         ));
     }
 
-    public function edit($email)
+    public function edit($id)
     {
-        $user = User::model()->where('Email', '=', $email)->first();
+        $getRole = $this->userService->getRole($id);
+        $user = $this->userService->getUser($id);
+        $allRole = $this->userService->getRoleAll();
+        if(!$user) {
+            redirect('/404.html');
+        }
 
         View::render('user/edit', array(
             'title' => 'Edit User',
             'user' => $user,
+            'role' => $getRole,
+            'allRole' => $allRole,
         ));
     }
 
-    public function update($email)
+    public function update($id)
     {
-        $user = User::model()->where('Email', '=', $email)->first();
+        $this->userService->update($id);
+        setFlash('success', 'Data berhasil diupdate');
 
-        if(!$user) {
-            header('Location: /user');
-        }
-
-        $user = User::model()->where('Email', '=', $email)->update([
-            'Password' => md5($_POST['password']) ?? $user->Password,
-            'Active' => $_POST['active'] ?? $user->Active,
-        ]);
-
-        header('Location: /user');
+        redirect('/user');
     }
 
-    public function delete($email)
+    public function delete($id)
     {
-        $user = User::model()->where('Email', '=', $email)->delete();
-
-        header('Location: /user');
+        $this->userService->delete($id);
+        setFlash('success', 'Data berhasil dihapus');
+        redirect('/user');
     }
 
     public function create()
     {
         $user = User::model();
+        $allRole = $this->userService->getRoleAll();
 
         View::render('user/create', array(
             'title' => 'Create User',
             'user' => $user,
+            'allRole' => $allRole,
         ));
     }
 
     public function store()
     {
-        $user = User::model()->create([
-            'Email' => $_POST['username'],
-            'Password' => md5($_POST['password']),
-            'Active' => $_POST['active'],
-        ]);
+        $this->userService->store();
+        setFlash('success', 'Data berhasil disimpan');
 
-        header('Location: /user');
+        redirect('/user');
     }
 
-    public function show($email)
+    public function show($id)
     {
-        $user = User::model()->where('Email', '=', $email)->first();
+        $user = $this->userService->getUser($id);
+        if(!$user) {
+            redirect('/404.html');
+        }
 
         View::render('user/detail', array(
             'title' => 'Detail User',
+            'user' => $user,
+        ));
+    }
+
+    public function export()
+    {
+        $user = $this->userService->getAllUser();
+
+        View::renderPdf('user/export', array(
+            'title' => 'Export User',
             'user' => $user,
         ));
     }

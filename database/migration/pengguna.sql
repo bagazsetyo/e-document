@@ -1,0 +1,12 @@
+CREATE TABLE pengguna (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    kode_pengguna VARCHAR(255) NOT NULL,
+    nama VARCHAR(255) NOT NULL,
+    jenis_pengguna_id int(11) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    telepon VARCHAR(20) NULL,
+    foto text NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+

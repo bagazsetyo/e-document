@@ -8,10 +8,5 @@ class DokumenFile extends Model
 {
     protected $table = 'dokumen_file';
     protected $primaryKey = 'ID';
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->setTable($this->table);
-    }
+    protected $logable = true;
 }

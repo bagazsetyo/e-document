@@ -4,19 +4,20 @@ namespace Kuliah\ManagementDocument\Controller;
 
 use Kuliah\ManagementDocument\App\View;
 use Kuliah\ManagementDocument\Models\Permission;
+use Kuliah\ManagementDocument\Service\PermissionService;
 
 class PermissionController
 {
+    protected PermissionService $permissionService;
+
+    public function __construct()
+    {
+        $this->permissionService = new PermissionService();
+    }
+
     public function index()
     {
-        $permission = Permission::model(); 
-
-        if(isset($_GET['search'])) {
-            $permission = $permission->where('tabel', 'like', '%'.$_GET['search'].'%')
-                            ->orWhere('user', 'like', '%'.$_GET['search'].'%');
-        }
-
-        $permission = $permission->paginate(10);
+        $permission = $this->permissionService->index();
 
         View::render('permission/index', array(
             'title' => 'Permission',

@@ -4,9 +4,17 @@ namespace Kuliah\ManagementDocument\Controller;
 
 use Kuliah\ManagementDocument\App\View;
 use Kuliah\ManagementDocument\Models\User;
+use Kuliah\ManagementDocument\Service\AuthService; // Add this line
 
 class AuthController
 {
+    private AuthService $authService;
+
+    public function __construct()
+    {
+        $this->authService = new AuthService();
+    }
+
     public function index()
     {
         View::render('auth/login', array(
@@ -17,24 +25,17 @@ class AuthController
 
     public function login()
     {
-        $_SESSION['error'] = null;
-        $user = User::model()->where('Email', '=', $_POST['email'])->andWhere('Active', '=', '1')->first();
+        $user = $this->authService->login($_POST);
         if($user){
-            $pass = md5($_POST['password']);
-            if($user->Password == $pass){
-                $_SESSION['user'] = $user;
-                header('Location: /dashboard');
-                exit;
-            }
+            redirect('/dashboard');
+            exit;
         }
-
-        $_SESSION['error'] = 'Email atau Password salah';
-        header('Location: /');
+        redirect('/');
     }
 
     public function logout()
     {
-        session_destroy();
-        header('Location: /');
+        $this->authService->logout();
+        redirect('/');
     }
 }

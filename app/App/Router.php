@@ -80,7 +80,6 @@ class Router
             }
         }
 
-        http_response_code(404);
-        echo 'Halaman tidak ditemukan';
+        redirect('/404.html');
     }
 }

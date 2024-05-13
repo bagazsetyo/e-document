@@ -2,6 +2,7 @@
 
 namespace Kuliah\ManagementDocument\App;
 use Kuliah\ManagementDocument\Helpers\includes;
+use Kuliah\ManagementDocument\Models\Setting;
 
 class View
 {
@@ -17,6 +18,7 @@ class View
 
         echo $newUrl;
     }
+
     public static function render(string $view, array $data = []): void
     {
         extract($data);
@@ -30,5 +32,18 @@ class View
         }else{
             include __DIR__ . "/../View/layouts/main.php";
         }
+    }
+
+    // view pdf 
+    public static function renderPdf(string $view, array $data = []): void
+    {
+        extract($data);
+        
+        ob_start();
+        require __DIR__ . "/../View/$view.php";
+        $content = ob_get_clean();
+
+        $setting = Setting::model()->first();
+        include __DIR__ . "/../View/layouts/pdf.php";
     }
 }
